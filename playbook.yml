@@ -1,0 +1,7 @@
+---
+- name: CentOS 7.2 Docker Host
+  hosts: all
+  user: vagrant
+  become: yes
+  roles:
+    - docker

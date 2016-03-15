@@ -1,0 +1,32 @@
+---
+- name: Add Docker Repos
+  copy: src=roles/docker/files/docker.repo dest=/etc/yum.repos.d/docker.repo
+  # yumrepo:
+  #   name: dockerrepo
+  #   description: Docker Repository
+  #   baseurl: https://yum.dockerproject.org/repo/main/centos/$releasever/
+  #   gpgkey: https://yum.dockerproject.org/gpg
+  #   enabled: yes
+  #   gpgcheck: yes
+
+- name: Install Docker Engine
+  yum: name=docker-engine state=latest
+
+- name: Configure Overlay module
+  modprobe: name=overlay state=present
+
+- name: Configure Docker Overlay storage
+  copy: src=roles/docker/files/docker.service dest=/etc/systemd/system/docker.service
+
+- name: Configure Docker Socket
+  copy: src=roles/docker/files/docker.socket dest=/etc/systemd/system/docker.socket
+
+- name: Start Docker Service
+  service: name=docker state=started enabled=yes
+
+- name: Add vagrant user to docker group.
+  user:
+    name: vagrant
+    groups: docker
+    append: yes
+  become: yes
