@@ -1,13 +1,6 @@
 ---
 - name: Add Docker Repos
   copy: src=roles/docker/files/docker.repo dest=/etc/yum.repos.d/docker.repo
-  # yumrepo:
-  #   name: dockerrepo
-  #   description: Docker Repository
-  #   baseurl: https://yum.dockerproject.org/repo/main/centos/$releasever/
-  #   gpgkey: https://yum.dockerproject.org/gpg
-  #   enabled: yes
-  #   gpgcheck: yes
 
 - name: Install Docker Engine
   yum: name=docker-engine state=latest
