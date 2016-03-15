@@ -6,6 +6,9 @@
   yum: name=docker-engine state=latest
 
 - name: Configure Overlay module
+  copy: src=roles/docker/files/overlay.conf dest=/etc/modules-load.d/overlay.conf
+
+- name: Load overlay module
   modprobe: name=overlay state=present
 
 - name: Configure Docker Overlay storage
