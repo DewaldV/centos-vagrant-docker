@@ -23,5 +23,5 @@ describe command('docker info') do
 end
 
 describe interface('eth1') do
-  it { should have_ipv4_address("192.168.50.100") }
+  it { should have_ipv4_address('192.168.50.100') }
 end
