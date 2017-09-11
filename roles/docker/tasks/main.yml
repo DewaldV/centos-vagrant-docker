@@ -1,28 +1,33 @@
 ---
-- name: Add Docker Repos
-  copy: src=roles/docker/files/docker.repo dest=/etc/yum.repos.d/docker.repo
+- name:           Remove old versions
+  yum:
+    name:         "{{ item }}"
+    state:        absent
+  with_items:     "{{ docker_old_packages }}"
 
-- name: Install Docker Engine
-  yum: name=docker-engine state=latest
+- name:           Add Docker Repo
+  yum_repository:
+    name:         docker-ce-stable
+    description:  "Docker CE Stable - $basearch"
+    baseurl:      "https://download.docker.com/linux/centos/7/$basearch/stable"
+    enabled:      yes
+    gpgcheck:     yes
+    gpgkey:       https://download.docker.com/linux/centos/gpg
 
-- name: Configure Overlay module
-  copy: src=roles/docker/files/overlay.conf dest=/etc/modules-load.d/overlay.conf
+- name:           Install Docker Engine
+  yum:
+    name:         "docker-ce-{{ docker_version }}"
+    state:        present
 
-- name: Load overlay module
-  modprobe: name=overlay state=present
+- name:           Start Docker Service
+  service:
+    name:         docker
+    state:        started
+    enabled:      yes
 
-- name: Configure Docker Overlay storage
-  copy: src=roles/docker/files/docker.service dest=/etc/systemd/system/docker.service
-
-- name: Configure Docker Socket
-  copy: src=roles/docker/files/docker.socket dest=/etc/systemd/system/docker.socket
-
-- name: Start Docker Service
-  service: name=docker state=started enabled=yes
-
-- name: Add vagrant user to docker group.
+- name:           Add vagrant user to docker group.
   user:
-    name: vagrant
-    groups: docker
-    append: yes
-  become: yes
+    name:         vagrant
+    groups:       docker
+    append:       yes
+  become:         yes

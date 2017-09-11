@@ -1,0 +1,8 @@
+---
+docker_version:       17.06.2.ce
+
+docker_old_packages:
+  - docker
+  - docker-common
+  - docker-selinux
+  - docker-engine

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe package('docker-engine') do
+describe package('docker-ce') do
   it { should be_installed }
 end
 
@@ -22,6 +22,3 @@ describe command('docker info') do
   its(:stdout) { should match /Storage Driver: overlay/ }
 end
 
-describe interface('eth1') do
-  it { should have_ipv4_address('192.168.50.100') }
-end
